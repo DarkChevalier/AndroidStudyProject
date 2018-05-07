@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:lsp="http://schemas.android.com/apk/res-auto"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_main"
@@ -62,9 +63,42 @@
         android:id="@+id/rotateCircleView"
         android:layout_width="300dp"
         android:layout_height="300dp" />
+
     <com.sunzhibin.studyproject.widget.RippleView
         android:id="@+id/rippleView"
         android:layout_width="300dp"
         android:layout_height="300dp" />
 
+    <com.sunzhibin.studyproject.widget.RulerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        lsp:bgColor="#fcfffc"
+        lsp:firstScale="172"
+        lsp:isBgRoundRect="true"
+        lsp:largeScaleColor="@color/colorAccent"
+        lsp:largeScaleStroke="5dp"
+        lsp:maxScale="230"
+        lsp:midScaleColor="@color/colorPrimaryDark"
+        lsp:midScaleStroke="3dp"
+        lsp:minScale="150"
+        lsp:resultNumColor="#50b586"
+        lsp:resultNumTextSize="20sp"
+        lsp:rulerHeight="50dp"
+        lsp:rulerToResultgap="30dp"
+        lsp:scaleCount="5"
+        lsp:scaleGap="10dp"
+        lsp:scaleNumColor="#666666"
+        lsp:scaleNumTextSize="16sp"
+        lsp:showScaleResult="true"
+        lsp:smallScaleColor="@color/colorPrimary"
+        lsp:smallScaleStroke="2dp"
+        lsp:unit="cm"
+        lsp:unitColor="#50b586"
+        lsp:unitTextSize="10sp" />
+
+    <com.sunzhibin.studyproject.widget.RulerView2
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </android.support.constraint.ConstraintLayout>
