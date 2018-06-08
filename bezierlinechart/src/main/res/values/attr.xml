@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LineChartView">
+        <attr name="maxvalue" format="dimension" />
+        <attr name="bezier_line_width" format="dimension" />
+        <attr name="bg_line_width" format="dimension" />
+        <attr name="minvalue" format="dimension" />
+        <attr name="markHeight" format="dimension" />
+
+        <attr name="markWidth" format="dimension" />
+        <attr name="markTextSize" format="dimension" />
+        <attr name="yTextSize" format="dimension" />
+        <attr name="xTextSize" format="dimension" />
+
+        <attr name="yTextColor" format="color" />
+        <attr name="xTextColor" format="color" />
+        <attr name="lineTextColor" format="color" />
+        <attr name="xLineTextColor" format="color" />
+    </declare-styleable>
+</resources>

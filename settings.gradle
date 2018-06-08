@@ -1,1 +1,1 @@
-include ':app', ':materialanimation', ':activitystack'
+include ':app', ':materialanimation', ':activitystack', ':bezierlinechart'
