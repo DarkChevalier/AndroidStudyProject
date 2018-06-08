@@ -14,7 +14,7 @@ import android.widget.Scroller;
 import com.sunzhibin.studyproject.R;
 
 /**
- * @see <a href="https://github.com/qindachang">https://github.com/qindachang</a>
+ * @see <a href="https://github.com/qindachang/RulerView">https://github.com/qindachang/RulerView</a>
  */
 
 public class RulerView2 extends View {

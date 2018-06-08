@@ -1,1 +1,1 @@
-include ':app', ':materialanimation'
+include ':app', ':materialanimation', ':activitystack'

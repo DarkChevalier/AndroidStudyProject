@@ -19,6 +19,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setupLeakCanary();
+
     }
 
     protected RefWatcher setupLeakCanary() {
