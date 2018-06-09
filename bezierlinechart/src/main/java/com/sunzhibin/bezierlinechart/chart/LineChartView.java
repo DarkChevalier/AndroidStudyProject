@@ -566,7 +566,7 @@ public class LineChartView extends View {
                 Log.d(TAG, "onTouchEvent: ACTION_MOVE mDownX = " + mDownX);
                 float tempX = event.getX();
 
-                mTempDistance += tempX - mDownX;
+//                mTempDistance += tempX - mDownX;
 
                 invalidate();
                 //postInvalidateDelayed(50);
