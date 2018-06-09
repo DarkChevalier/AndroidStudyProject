@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.lanchuang.bezierlinechart"
+        applicationId "com.sunzhibin.bezierlinechart"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1

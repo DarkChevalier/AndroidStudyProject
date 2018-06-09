@@ -17,6 +17,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Scroller;
 
 import com.sunzhibin.bezierlinechart.R;
 
@@ -94,6 +95,11 @@ public class LineChartView extends View {
     //是否需要画刻度线
     private boolean isNeedYRuling = false;
     private boolean isNeedXRuling = false;
+
+    private Scroller mScroller;
+    //每页展示做多的数据，一般7条
+    private final static int mMaxShowSize = 7;
+    private float mTempDistance = -200;
 
     public LineChartView(Context context) {
         super(context);
@@ -190,6 +196,7 @@ public class LineChartView extends View {
         mMaxYPointF = new PointF();
         mMinYPointF = new PointF();
 
+        mScroller = new Scroller(getContext());
     }
 
     @Override
@@ -277,10 +284,10 @@ public class LineChartView extends View {
 //        if (mMarginLeftRight == 0 || mMarginLeftRight < textWidth / 2f) {
 //            mMarginLeftRight = textWidth / 2;
 //        }
-        float xNameintervalX = (mWidth - mMarginLeftRight - textWidth - textYpaddingY) / (mXNameList.size() - 1);//横坐标的间隔
+        float xNameintervalX = (mWidth - mMarginLeftRight - textWidth - textYpaddingY) / (mMaxShowSize);//横坐标的间隔
         for (int i = 0; i < mXNameList.size(); i++) {
             canvas.drawText(mXNameList.get(i),
-                    mMarginLeftRight + xNameintervalX * i + textYpaddingY,
+                    mMarginLeftRight + xNameintervalX * i + textYpaddingY + mTempDistance,
                     mHeight - textXBottomX,
                     mXPaint);
             //绘制Y轴
@@ -298,9 +305,16 @@ public class LineChartView extends View {
                         mMarginLeftRight + xNameintervalX * i + textYpaddingY + textWidth / 2,
                         0 + mMarginTopBottom,
                         mXLineTextPaint);
+            } else {
+                canvas.drawLine(mMarginLeftRight + xNameintervalX * i + textYpaddingY + textWidth / 2,
+                        mHeight - textHeight - textXpaddingX - textXBottomX,
+                        mMarginLeftRight + xNameintervalX * i + textYpaddingY + textWidth / 2,
+                        mHeight - textHeight - textXpaddingX - textXBottomX - dip2px(getContext(),2),
+                        mXLineTextPaint);
             }
             xvalPointF.add(new PointF(mMarginLeftRight + xNameintervalX * i + textYpaddingY + textWidth / 2,
                     mHeight - textHeight - textXpaddingX - textXBottomX));
+
         }
     }
 
@@ -402,7 +416,7 @@ public class LineChartView extends View {
             //最后的正负值是左移右移
             x = xvalPointF.get(index).x + i * (xvalPointF.get(1).x - xvalPointF.get(0).x);
             y = mMinYPointF.y - totalHeight * pointF.y / dataLenght + mMarginTopBottom;
-            p = new PointF(x, y);
+            p = new PointF(x + mTempDistance, y);
             pointFs.add(p);
         }
         return pointFs;
@@ -550,7 +564,10 @@ public class LineChartView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.d(TAG, "onTouchEvent: ACTION_MOVE mDownX = " + mDownX);
-                mDownX = event.getX();
+                float tempX = event.getX();
+
+                mTempDistance += tempX - mDownX;
+
                 invalidate();
                 //postInvalidateDelayed(50);
                 break;

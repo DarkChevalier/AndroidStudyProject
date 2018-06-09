@@ -5,13 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -19,47 +18,36 @@ import android.widget.ImageView;
  * @author: sunzhibin
  * <p>
  * date: 2018/4/26.
- * description: description
+ * description: https://www.jianshu.com/p/626dbd93207d
  * e-mail: E-mail
  * modify： the history
  * </p>
  */
 @SuppressLint("AppCompatCustomView")
 public class RoundCircleView2 extends ImageView {
-
     private Paint mPaint;
     private Xfermode mXfermode;
-    private int mBorderRadius = 10;
+    private int mBorderRadius = 30;
 
     public RoundCircleView2(Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public RoundCircleView2(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    public RoundCircleView2(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public RoundCircleView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RoundCircleView2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public RoundCircleView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
-    private void init() {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
+        mXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+
         if (getDrawable() == null) {
             return;
         }
@@ -79,7 +67,7 @@ public class RoundCircleView2 extends ImageView {
     }
 
     /**
-     * 图片拉伸
+     * 图片拉升
      *
      * @param drawable
      * @return
@@ -92,6 +80,7 @@ public class RoundCircleView2 extends ImageView {
                 (int) (scale * drawable.getIntrinsicHeight()));
         return drawable;
     }
+
 
     private Bitmap drawableToBitamp(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {

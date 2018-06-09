@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> xList = new ArrayList<>();
         List<PointF> yList = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 8; i++) {
             xList.add("" + i);
             yList.add(new PointF(i, (int) (Math.random() * 100)));
         }
