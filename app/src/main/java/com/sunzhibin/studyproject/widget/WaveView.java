@@ -65,7 +65,7 @@ public class WaveView extends View {
 
     //外圆渐进色
     private int[] mGradientColors = new int[]{Color.parseColor("#ffffff"),
-            Color.parseColor("#5aa828")};
+            Color.parseColor("#98d7d4")};
     //圆形描边颜色
     private int mCircleColor = Color.parseColor("#addef8");
     private int mProgressColor = Color.parseColor("#5aa828");
@@ -76,26 +76,25 @@ public class WaveView extends View {
     /**
      * 外圆宽度
      */
-    private int mCircleGradientStroke = dip2px(getContext(), 15);
+    private int mCircleGradientStroke = dip2px(getContext(), 11);
     /**
      * 内圆环宽度
      */
-    private int mCircleStroke = dip2px(getContext(), 1f);
+    private int mCircleStroke = dip2px(getContext(), 0.5f);
     /**
      * 字号
      */
-    private int mProgressTextSize = dip2px(getContext(), 60);
+    private int mProgressTextSize = dip2px(getContext(), 30);
     //内圆距外圆距离
-    private int mInnerCircleDistance = dip2px(getContext(), 10);
-    private int mProgress = 60;
+    private int mInnerCircleDistance = dip2px(getContext(), 4);
     private boolean mNeedPercent = true;
     private SweepGradient mSweepGradient;
 
     private int mHeight;
     private int mWidth;
     //水滴的大小
-    private int mWaterDropHeight;
-    private int mWaterDropWidth;
+    private int mWaterDropHeight = dip2px(getContext(), 45);
+    private int mWaterDropWidth = dip2px(getContext(), 45);
 
     private int mRoteDegress = 0;
     private ValueAnimator mValueAnimator;
@@ -187,6 +186,7 @@ public class WaveView extends View {
         mCirclePaint.setStrokeWidth(mCircleStroke);//设置线宽
 
         mProgressTextPaint.setTextSize(mProgressTextSize);
+        mProgressTextPaint.setColor(mProgressColor);
         mBezierWaterPaint.setColor(mProgressColor);
         mCirclePaint.setColor(mCircleColor);
 
@@ -326,7 +326,7 @@ public class WaveView extends View {
         mCirclePaint.setStrokeWidth((mCircleGradientStroke + mInnerCircleDistance));
         mCirclePaint.setColor(Color.WHITE);
         //圆环白色圆环
-        canvas.drawCircle(mWidth / 2f, mHeight / 2f, mWidth / 2f - mCircleGradientStroke / 2f- mInnerCircleDistance / 2f, mCirclePaint);
+        canvas.drawCircle(mWidth / 2f, mHeight / 2f, mWidth / 2f - mCircleGradientStroke / 2f - mInnerCircleDistance / 2f, mCirclePaint);
 
     }
 
@@ -356,7 +356,7 @@ public class WaveView extends View {
             // assign matrix to invalidate the shader
             mWaveShader.setLocalMatrix(mShaderMatrix);
 
-            float radius = mWidth / 2f - mCircleStroke - mCircleGradientStroke - mInnerCircleDistance;
+            float radius = mWidth / 2f - mCircleGradientStroke - mInnerCircleDistance;
             canvas.drawCircle(mWidth / 2f, mHeight / 2f, radius, mViewPaint);
         } else {
             mViewPaint.setShader(null);
@@ -370,9 +370,10 @@ public class WaveView extends View {
      * @param canvas
      */
     private void drawText(Canvas canvas) {
-        float textWidth = mProgressTextPaint.measureText(mProgress + "%");
+        float textWidth = mProgressTextPaint.measureText((int) (mWaterLevelRatio * 100) + "%");
         float textHeight = getFontHeight(mProgressTextPaint);
-        canvas.drawText(mProgress + "%", textWidth / 2f, textHeight / 2f, mProgressTextPaint);
+        canvas.drawText((int) (mWaterLevelRatio * 100) + "%", mWidth / 2 - textWidth / 2f,
+                mHeight / 2 + textHeight / 4f, mProgressTextPaint);
     }
 
     private void createShader() {
