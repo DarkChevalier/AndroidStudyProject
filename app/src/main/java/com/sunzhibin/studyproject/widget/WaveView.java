@@ -84,7 +84,7 @@ public class WaveView extends View {
     /**
      * 字号
      */
-    private int mProgressTextSize = dip2px(getContext(), 30);
+    private int mProgressTextSize = dip2px(getContext(), 60);
     //内圆距外圆距离
     private int mInnerCircleDistance = dip2px(getContext(), 4);
     private boolean mNeedPercent = true;
@@ -137,6 +137,7 @@ public class WaveView extends View {
     private float mWaterLevelRatio = DEFAULT_WATER_LEVEL_RATIO;
     private float mWaveShiftRatio = DEFAULT_WAVE_SHIFT_RATIO;
     private ValueAnimator mSensorAnimator;
+    private Rect mProgressTextRect;
 
     public WaveView(Context context) {
         super(context);
@@ -380,10 +381,17 @@ public class WaveView extends View {
      * @param canvas
      */
     private void drawText(Canvas canvas) {
-        float textWidth = mProgressTextPaint.measureText((int) (mWaterLevelRatio * 100) + "%");
-        float textHeight = getFontHeight(mProgressTextPaint);
-        canvas.drawText((int) (mWaterLevelRatio * 100) + "%", mWidth / 2 - textWidth / 2f,
-                mHeight / 2 + textHeight / 2f, mProgressTextPaint);
+        String test = (int) (mWaterLevelRatio * 100) + "%";
+        if (mProgressTextRect == null) {
+            mProgressTextRect = new Rect();
+        } else {
+            mProgressTextRect.setEmpty();
+        }
+        mProgressTextPaint.getTextBounds(test, 0, test.length(), mProgressTextRect);
+        int width = mProgressTextRect.width();//文字宽
+        int height = mProgressTextRect.height();//文字高
+        canvas.drawText((int) (mWaterLevelRatio * 100) + "%", mWidth / 2 - width / 2f,
+                mHeight / 2 + height / 2f, mProgressTextPaint);
     }
 
     private void createShader() {
@@ -460,8 +468,15 @@ public class WaveView extends View {
     }
 
     public void stopAnimation() {
-        mValueAnimator.cancel();
-        mDropAnimator.cancel();
+        if (mSensorAnimator != null) {
+            mSensorAnimator.cancel();
+        }
+        if (mValueAnimator != null) {
+            mValueAnimator.cancel();
+        }
+        if (mDropAnimator != null) {
+            mDropAnimator.cancel();
+        }
     }
 
     public float getWaveShiftRatio() {
@@ -563,15 +578,7 @@ public class WaveView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mSensorAnimator != null) {
-            mSensorAnimator.cancel();
-        }
-        if (mValueAnimator != null) {
-            mValueAnimator.cancel();
-        }
-        if (mDropAnimator != null) {
-            mDropAnimator.cancel();
-        }
+        stopAnimation();
 
     }
 
@@ -581,11 +588,6 @@ public class WaveView extends View {
     public int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
-    }
-
-    public float getFontHeight(Paint paint) {
-        Paint.FontMetrics fm = paint.getFontMetrics();
-        return Math.abs(fm.descent - fm.ascent);
     }
 
 }
