@@ -96,7 +96,7 @@ public class WaveView extends View {
     private int mWaterDropHeight = dip2px(getContext(), 45);
     private int mWaterDropWidth = dip2px(getContext(), 45);
 
-    private int mRoteDegress = 0;
+    private int mRoteDegrees = 0;
     private ValueAnimator mValueAnimator;
     private ValueAnimator mDropAnimator;
     private Rect mSrcRect;
@@ -107,6 +107,10 @@ public class WaveView extends View {
     private Bitmap mCircleBitmap;
     private Bitmap mDropBitmap;
     private PorterDuffXfermode mXfermode;
+    /**
+     * 传感器旋转角度
+     */
+    private float mSensorDegrees;
 
     private static final float DEFAULT_AMPLITUDE_RATIO = 0.05f;
     private static final float DEFAULT_WATER_LEVEL_RATIO = 0.5f;
@@ -132,6 +136,7 @@ public class WaveView extends View {
     private float mWaveLengthRatio = DEFAULT_WAVE_LENGTH_RATIO;
     private float mWaterLevelRatio = DEFAULT_WATER_LEVEL_RATIO;
     private float mWaveShiftRatio = DEFAULT_WAVE_SHIFT_RATIO;
+    private ValueAnimator mSensorAnimator;
 
     public WaveView(Context context) {
         super(context);
@@ -196,6 +201,8 @@ public class WaveView extends View {
         mShaderMatrix = new Matrix();
         mViewPaint = new Paint();
         mViewPaint.setAntiAlias(true);
+
+
     }
 
     @Override
@@ -247,11 +254,14 @@ public class WaveView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.save();
+        canvas.rotate(mSensorDegrees, canvas.getWidth() / 2, canvas.getHeight() / 2);
         drawableWaterDrop(canvas);
         drawableCircleGradient(canvas);
         drawableInnerCircle(canvas);
         drawWave(canvas);
         drawText(canvas);
+        canvas.restore();
     }
 
     /**
@@ -271,7 +281,7 @@ public class WaveView extends View {
             canvas1.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2 - mCircleGradientStroke / 2, mCircleGradientPaint);
         }
         canvas.save();
-        canvas.rotate(-90 + mRoteDegress % 360, mWidth / 2, mHeight / 2);
+        canvas.rotate(-90 + mRoteDegrees % 360, mWidth / 2, mHeight / 2);
         canvas.drawBitmap(mCircleBitmap, 0, 0, mCircleGradientPaint);
         canvas.restore();
     }
@@ -373,7 +383,7 @@ public class WaveView extends View {
         float textWidth = mProgressTextPaint.measureText((int) (mWaterLevelRatio * 100) + "%");
         float textHeight = getFontHeight(mProgressTextPaint);
         canvas.drawText((int) (mWaterLevelRatio * 100) + "%", mWidth / 2 - textWidth / 2f,
-                mHeight / 2 + textHeight / 4f, mProgressTextPaint);
+                mHeight / 2 + textHeight / 2f, mProgressTextPaint);
     }
 
     private void createShader() {
@@ -421,7 +431,7 @@ public class WaveView extends View {
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                mRoteDegress = (int) animation.getAnimatedValue();
+                mRoteDegrees = (int) animation.getAnimatedValue();
                 postInvalidate();
             }
         });
@@ -431,8 +441,8 @@ public class WaveView extends View {
         mValueAnimator.setRepeatMode(ValueAnimator.RESTART);
         mValueAnimator.start();
         Log.d("mDropAnimator: ", "mWidth: " + mWidth + " mHeight: " + mHeight);
-
-        mDropAnimator = ValueAnimator.ofInt(0, mHeight - mCircleGradientStroke - mInnerCircleDistance);
+        //默认210dp
+        mDropAnimator = ValueAnimator.ofInt(0, mHeight - mWaterDropHeight);
         mDropAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -525,6 +535,44 @@ public class WaveView extends View {
 
     public void setShowWave(boolean showWave) {
         mShowWave = showWave;
+    }
+
+    /**
+     * @param targetDegrees target角度
+     */
+    public void setmSensorDegrees(float targetDegrees) {
+        if (mSensorAnimator != null) {
+            mSensorAnimator.cancel();
+        }
+        mSensorAnimator = new ValueAnimator();
+        mSensorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mSensorDegrees = (float) animation.getAnimatedValue();
+                Log.d("mSensorDegrees: ", "" + mSensorDegrees);
+                postInvalidate();
+            }
+        });
+        mSensorAnimator.setFloatValues(mSensorDegrees, targetDegrees);
+        mSensorAnimator.setInterpolator(new LinearInterpolator());
+        mSensorAnimator.setDuration(500);
+        mSensorAnimator.start();
+
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mSensorAnimator != null) {
+            mSensorAnimator.cancel();
+        }
+        if (mValueAnimator != null) {
+            mValueAnimator.cancel();
+        }
+        if (mDropAnimator != null) {
+            mDropAnimator.cancel();
+        }
+
     }
 
     /**

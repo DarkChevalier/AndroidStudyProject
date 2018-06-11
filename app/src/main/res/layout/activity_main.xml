@@ -125,8 +125,21 @@
         android:id="@+id/waveView"
         android:layout_width="240dp"
         android:layout_height="240dp"
-        android:background="@color/ml_white"
-        />
+        android:background="@color/ml_white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="120.5dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="120.5dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 
     <ImageView
